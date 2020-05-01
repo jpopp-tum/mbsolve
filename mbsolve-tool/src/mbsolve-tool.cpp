@@ -345,8 +345,8 @@ main(int argc, char** argv)
                   0.0,
                   0.0 });
 
-            mbsolve::real deph_r1 = 1.0 / (1.0e-12);
-            mbsolve::real deph_r2 = 1.0 / (6.0e-12);
+            mbsolve::real deph_r1 = 1.0 / (1.6e-12);
+            mbsolve::real deph_r2 = 1.0 / (4.8e-12);
 
             std::vector<std::vector<mbsolve::real> > scattering_rates = {
                 { deph_r1, 0.4947e12, 0.0974e12, 0.8116e12, 1.0410e12 },
@@ -364,7 +364,7 @@ main(int argc, char** argv)
                 5.6e21, H, u, relax_sop);
 
             auto mat_ar = std::make_shared<mbsolve::material>(
-                "AR", qm, 12.96, 0.9, 1100);
+                "AR", qm, 17, 0.9, 1400);
             mbsolve::material::add_to_library(mat_ar);
 
             /* set up device with semi-transparent mirror boundary cond. */
