@@ -23,14 +23,6 @@
 clear all;
 close all;
 
-tum_colors = [ [0, 101, 189];
-        [227, 114, 34];
-        [162, 173, 0];
-        [152, 198, 234];
-        %[218, 215, 203];
-        [0, 0, 0];
-            ] *1/255;
-
 %  choose hdf5 file
 [filename, folder] = uigetfile('../../*.hdf', 'Select result data');
 f = fullfile(folder, filename);
@@ -49,7 +41,7 @@ t = 0:d_t:t_e;
 e = h5read(f, '/e0/real');
 
 % cut off transients (set start to 0 to use full trace)
-start = 5e-9;
+start = 15e-9;
 interval = t > start;
 e = e(interval);
 t = t(interval);
@@ -95,13 +87,13 @@ ylabel('Field at facet/a.u.');
 papersize = [ 15 6 ];
 fig = figure('units', 'centimeters');
 pos = get(gcf, 'pos');
-plot(freqs/1e12, Y/max(Y), 'Color', [0, 101, 189]/255);
-%xlim([2.5, 5]);
+semilogy(freqs/1e12, Y.^2/max(Y.^2), 'Color', [0, 101, 189]/255);
 xlim([3.1, 4.1]);
 xticks(3.1:0.1:4.1);
-ylim([0, 1.05]);
+ylim([1e-4, 10]);
+yticks(10.^[-4:1]);
 xlabel('Frequency/THz');
-ylabel('Electric field at facet/a.u.');
+ylabel('Power spectrum at facet/a.u.');
 
 set(fig, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Centimeters', ...
     'PaperSize', papersize);
