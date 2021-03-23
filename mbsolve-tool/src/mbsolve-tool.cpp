@@ -197,7 +197,7 @@ main(int argc, char** argv)
                     scattering_rates);
 
             auto qm = std::make_shared<mbsolve::qm_description>(
-                6e24, H, u, relax_sop);
+                6e24, 0, H, u, relax_sop);
 
             auto mat_vac = std::make_shared<mbsolve::material>("Vacuum");
             mbsolve::material::add_to_library(mat_vac);
@@ -255,7 +255,7 @@ main(int argc, char** argv)
 
             /* set up quantum mechanical description */
             auto qm = std::make_shared<mbsolve::qm_desc_2lvl>(
-                1e24, 2 * mbsolve::PI * 2e14, 6.24e-11, 1.0e10, 1.0e10);
+                1e24, 0, 2 * mbsolve::PI * 2e14, 6.24e-11, 1.0e10, 1.0e10);
 
             /* materials */
             auto mat_vac = std::make_shared<mbsolve::material>("Vacuum");
@@ -361,10 +361,10 @@ main(int argc, char** argv)
                     scattering_rates);
 
             auto qm = std::make_shared<mbsolve::qm_description>(
-                5.6e21, H, u, relax_sop);
+                5.6e21, 0, H, u, relax_sop);
 
-            auto mat_ar = std::make_shared<mbsolve::material>(
-                "AR", qm, 17, 0.9, 1400);
+            auto mat_ar =
+                std::make_shared<mbsolve::material>("AR", qm, 17, 0.9, 1400);
             mbsolve::material::add_to_library(mat_ar);
 
             /* set up device with semi-transparent mirror boundary cond. */
@@ -413,6 +413,7 @@ main(int argc, char** argv)
             /* set up quantum mechanical descriptions */
             auto qm_gain = std::make_shared<mbsolve::qm_desc_2lvl>(
                 5e21,
+                0,
                 2 * mbsolve::PI * 3.4e12,
                 2e-9,
                 1.0 / 10e-12,
@@ -421,6 +422,7 @@ main(int argc, char** argv)
 
             auto qm_absorber = std::make_shared<mbsolve::qm_desc_2lvl>(
                 1e21,
+                0,
                 2 * mbsolve::PI * 3.4e12,
                 6e-9,
                 1.0 / 3e-12,
@@ -555,7 +557,7 @@ main(int argc, char** argv)
                     scattering_rates);
 
             auto qm = std::make_shared<mbsolve::qm_description>(
-                1e25, H, u, relax_sop);
+                1e25, 0, H, u, relax_sop);
 
             /* materials */
             auto mat_vac = std::make_shared<mbsolve::material>("Vacuum");

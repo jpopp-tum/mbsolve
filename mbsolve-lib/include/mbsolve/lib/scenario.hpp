@@ -78,6 +78,47 @@ public:
 };
 
 /**
+ * Represents random initial conditions of the density matrix of a two level
+ * system that is with respect to space. \ingroup MBSOLVE_LIB
+ */
+class ic_density_random_2lvl : public ic_density
+{
+private:
+    /* random number generator */
+    std::random_device m_rand_dev;
+    std::mt19937 m_rand_gen;
+
+    /* distribution */
+    std::normal_distribution<real> m_dis;
+    real num_carrier_cell;
+
+public:
+    /**
+     * Constructs random initial conditions deviating slightly from an initial density
+     * matrix \p rho = [0 0 ; 0 1].
+     */
+    explicit ic_density_random_2lvl(real num_c_cell, real mean = 0.0, real stddev = 1.0)
+      : m_rand_gen(m_rand_dev()), m_dis(mean, stddev), num_carrier_cell(num_c_cell)
+    {}
+
+    /**
+     * Returns initial random density matrix (independent of position).
+     */
+    qm_operator initialize(real x)
+    {
+        std::vector<real> pop_rand(2);
+        std::vector<std::complex<real> > coh_rand(1);
+        real theta = 2 / std::sqrt(num_carrier_cell) * m_dis(m_rand_gen);
+        pop_rand[0] = pow(std::sin(theta / 2), 2);
+        pop_rand[1] = pow(std::cos(theta / 2), 2);
+        coh_rand[0] = std::sin(theta) / 2 *
+            std::exp(std::complex<real>(0, std::rand()));
+        qm_operator rho(pop_rand, coh_rand);
+        return rho;
+    }
+};
+
+/**
  * Abstract base class that represents the initial conditions of the
  * electric or magnetic field, which potentially depend on space.
  * \ingroup MBSOLVE_LIB

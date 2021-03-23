@@ -266,7 +266,9 @@ protected:
 
     /* density of charge carriers */
     real m_carrier_density;
-
+    
+    /* Number of charge carriers in a grid cell */
+    real m_num_carrier_cell;
     /*
       real m_period_length;
     */
@@ -285,17 +287,21 @@ public:
      * Constructs quantum mechanical description.
      *
      * \param [in] carrier_density    Density of particles in the system.
+     * \param [in] num_carrier_cell  Number of particles in one grid cell of
+     * the system.
      * \param [in] hamiltonian        Hamiltonian operator.
      * \param [in] dipole_operator    Dipole moment operator.
      * \param [in] relaxation_superop Relaxation superoperator.
      */
     explicit qm_description(
         real carrier_density,
+        real num_carrier_cell,
         const qm_operator& hamiltonian,
         const qm_operator& dipole_operator,
         std::shared_ptr<qm_superop> relaxation_superop)
       : m_num_levels(hamiltonian.get_num_levels()),
-        m_carrier_density(carrier_density), m_hamiltonian(hamiltonian),
+        m_carrier_density(carrier_density),
+        m_num_carrier_cell(num_carrier_cell), m_hamiltonian(hamiltonian),
         m_dipole_op(dipole_operator), m_relax_superop(relaxation_superop)
     {
         /* TODO: assert or exception: level count different? */
@@ -312,6 +318,11 @@ public:
      * Gets carrier density.
      */
     real get_carrier_density() const { return m_carrier_density; }
+
+    /**
+     * Gets carrier number in one grid cell.
+     */
+    real get_num_carrier_cell() const { return m_num_carrier_cell; }
 
     /**
      * Gets Hamiltonian.
@@ -364,6 +375,8 @@ public:
     * where \f$ e \f$ is the elementary charge.
 
      * \param [in] carrier_density         Density of particles in the system.
+     * \param [in] num_carrier_cell  Number of particles in one grid cell of
+     * the system.
      * \param [in] transition_freq         = \f$ \omega_0 \f$
      * \param [in] dipole_moment           = \f$ d \f$
      * \param [in] scattering_rate         Describes the decay of the
@@ -375,6 +388,7 @@ public:
      */
     explicit qm_desc_2lvl(
         real carrier_density,
+        real num_carrier_cell,
         real transition_freq,
         real dipole_moment,
         real scattering_rate,
@@ -382,6 +396,7 @@ public:
         real equilibrium_inversion = -1.0)
       : qm_description(
             carrier_density,
+            num_carrier_cell,
             qm_operator(
                 { -HBAR * transition_freq / 2, +HBAR * transition_freq / 2 }),
             qm_operator({ 0, 0 }, { E0 * dipole_moment }),
