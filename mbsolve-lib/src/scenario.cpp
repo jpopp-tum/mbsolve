@@ -177,4 +177,17 @@ scenario::set_ic_magnetic(std::shared_ptr<ic_field> magnetic_init)
 {
     m_h_init = magnetic_init;
 }
+
+bool
+scenario::get_boundary_flag() const
+{
+    return flag_BC;
 }
+
+void
+scenario::set_boundary_flag(bool flag)
+{
+    flag_BC = flag;
+}
+}
+

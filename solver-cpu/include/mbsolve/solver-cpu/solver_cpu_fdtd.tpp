@@ -135,7 +135,7 @@ solver_cpu_fdtd<num_lvl, density_algo>::solver_cpu_fdtd(
         m_fac_c[i] = m_sim_consts_fdtd[idx].fac_c;
         m_gamma[i] = m_sim_consts_fdtd[idx].gamma;
         m_mat_indices[i] = idx;
-
+        
         /* initialization */
         if (has_qm) {
             auto ic_dm = scen->get_ic_density();
@@ -224,6 +224,8 @@ template<unsigned int num_lvl, template<unsigned int> class density_algo>
 void
 solver_cpu_fdtd<num_lvl, density_algo>::run() const
 {
+    real m_h_mur_1 = 0.0, m_h_mur_end = 0.0;
+
 #pragma omp parallel
     {
         /* main loop */
@@ -262,17 +264,28 @@ solver_cpu_fdtd<num_lvl, density_algo>::run() const
 #endif
             for (int i = 1; i < m_scenario->get_num_gridpoints(); i++) {
                 m_h[i] += m_fac_c[i] * (m_e[i] - m_e[i - 1]);
+                if (i == 1) {
+                    if (m_scenario->get_boundary_flag() == 1) {
+                        /* apply boundary condition */
+                        m_h[0] = m_h_mur_1 +
+                            (0.5 - 1.0) / (0.5 + 1.0) * (m_h[1] - m_h[0]);
+                        m_h_mur_1 = m_h[1];
+                    } else {
+                        m_h[0] = 0;
+                    }
+                } else if (i == m_scenario->get_num_gridpoints() - 1) {
+                    if (m_scenario->get_boundary_flag() == 1) {
+                        m_h[m_scenario->get_num_gridpoints()] = m_h_mur_end +
+                            (0.5 - 1.0) / (0.5 + 1.0) *
+                                (m_h[m_scenario->get_num_gridpoints() - 1] -
+                                 m_h[m_scenario->get_num_gridpoints()]);
+                        m_h_mur_end =
+                            m_h[m_scenario->get_num_gridpoints() - 1];
+                    } else {
+                        m_h[m_scenario->get_num_gridpoints()] = 0;
+                    }
+                }
             }
-            /* no implicit synchronization required */
-
-            /* TODO PMC BC could be implemented intrinsically, since m_h[0]
-             * and m_h[end] are never updated.
-             * However, let us see how the new flexible BC code is
-             * implemented.
-             */
-            /* apply boundary condition */
-            m_h[0] = 0;
-            m_h[m_scenario->get_num_gridpoints()] = 0;
 
             /* update density matrix in parallel */
 #pragma omp for schedule(static)

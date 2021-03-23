@@ -176,6 +176,8 @@ private:
 
     real m_endtime;
 
+    bool flag_BC{ false };
+
     std::vector<std::shared_ptr<record> > m_records;
 
     std::vector<std::shared_ptr<source> > m_sources;
@@ -332,6 +334,16 @@ public:
      * Sets initial conditions for magnetic field.
      */
     void set_ic_magnetic(std::shared_ptr<ic_field> magnetic_init);
+
+    /**
+     * Sets Flag for the Field boundary condition
+     */
+    bool get_boundary_flag() const;
+
+    /**
+     * Sets Flag for the Field boundary condition
+     */
+    void set_boundary_flag(bool flag);
 };
 }
 
