@@ -361,7 +361,7 @@ main(int argc, char** argv)
                     scattering_rates);
 
             auto qm = std::make_shared<mbsolve::qm_description>(
-                5.6e21, 0, H, u, relax_sop);
+                5.6e21, 6.84e5, H, u, relax_sop);
 
             auto mat_ar =
                 std::make_shared<mbsolve::material>("AR", qm, 17, 0.9, 1400);

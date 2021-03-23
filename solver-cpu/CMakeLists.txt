@@ -37,6 +37,7 @@ add_library(solver-cpu
   ${SRC_BASE_CPU}/src/solver_cpu_fdtd_cvr_rodr.cpp
   ${SRC_BASE_CPU}/src/solver_cpu_fdtd_red_cvr_rodr.cpp
   ${SRC_BASE_CPU}/src/solver_cpu_fdtd_reg_cayley.cpp
+  ${SRC_BASE_CPU}/src/solver_cpu_fdtd_reg_cayley_qnoise.cpp
   ${SRC_BASE_CPU}/src/solver_cpu_fdtd_red_reg_cayley.cpp
   ${SRC_BASE_CPU}/src/solver_cpu_loader.cpp)
 set_target_properties(solver-cpu PROPERTIES
