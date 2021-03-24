@@ -306,6 +306,62 @@ main(int argc, char** argv)
                 std::make_shared<mbsolve::record>("inv12", 2.5e-15));
             scen->add_record(std::make_shared<mbsolve::record>("e", 2.5e-15));
 
+        } else if (device_file == "andreasen2009") {
+            /**
+             * The andreasen2009 setup is an atomic superfluorescence
+             * setup that consists of a two-level active region embedded in
+             * two vacuum section. For details see literature:
+             * https://doi.org/10.1103/PhysRevA.77.023810
+             */
+
+            mbsolve::real num_carrier_cell = 3e4;
+
+            /* set up quantum mechanical description */
+            auto qm = std::make_shared<mbsolve::qm_desc_2lvl>(
+                2.13e19,
+                num_carrier_cell,
+                2 * mbsolve::PI * 4.77e14,
+                6.875e-11,
+                1.32e7,
+                1.0e10);
+
+            /* materials */
+            auto mat_vac = std::make_shared<mbsolve::material>("Vacuum");
+            auto mat_ar =
+                std::make_shared<mbsolve::material>("AR_Andreasen", qm);
+            mbsolve::material::add_to_library(mat_vac);
+            mbsolve::material::add_to_library(mat_ar);
+
+            /* set up device */
+            dev = std::make_shared<mbsolve::device>("Andreasen");
+            dev->add_region(std::make_shared<mbsolve::region>(
+                "Vacuum left", mat_vac, 0, 70e-6));
+            dev->add_region(std::make_shared<mbsolve::region>(
+                "Active region", mat_ar, 70e-6, 7.07e-3));
+            dev->add_region(std::make_shared<mbsolve::region>(
+                "Vacuum right", mat_vac, 7.07e-3, 7.14e-3));
+
+            /* default settings */
+            if (num_gridpoints == 0) {
+                num_gridpoints = 102000;
+            }
+            if (sim_endtime < 1e-21) {
+                sim_endtime = 1e-9;
+            }
+
+            /* Andreasen basic scenario */
+            auto ic_d = std::make_shared<mbsolve::ic_density_random_2lvl>(
+                num_carrier_cell);
+            auto ic_e = std::make_shared<mbsolve::ic_field_const>(0.0);
+
+            scen = std::make_shared<mbsolve::scenario>(
+                "Basic", num_gridpoints, sim_endtime, ic_d, ic_e);
+            scen->set_boundary_flag(1);
+            
+            scen->add_record(
+                std::make_shared<mbsolve::record>("inv12", 1e-13));
+            scen->add_record(std::make_shared<mbsolve::record>("e", 1e-13));
+
         } else if (device_file == "tzenov2016") {
             /**
              * The tzenov2016 setup is a model of an actual quantum cascade
