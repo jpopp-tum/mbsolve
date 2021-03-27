@@ -71,7 +71,7 @@ solver_cpu_fdtd_red<num_lvl, density_algo>::solver_cpu_fdtd_red(
     }
 
     /* determine simulation settings */
-    init_fdtd_simulation(dev, scen, 0.5);
+    init_fdtd_simulation(dev, scen);
 
     /* inverse grid point size for Ampere's law */
     m_dx_inv = 1.0 / scen->get_gridpoint_size();

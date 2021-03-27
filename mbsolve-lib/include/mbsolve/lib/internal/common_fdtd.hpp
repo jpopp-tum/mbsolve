@@ -52,8 +52,7 @@ public:
 static void
 init_fdtd_simulation(
     std::shared_ptr<const device> dev,
-    std::shared_ptr<scenario> scen,
-    real courant = 1)
+    std::shared_ptr<scenario> scen)
 {
     if (scen->get_num_gridpoints() > 0) {
         /* speed of light (use smallest value of relative permittivities) */
@@ -97,7 +96,7 @@ init_fdtd_simulation(
             scen->set_gridpoint_size(d_x);
 
             /* get time step size via Courant number and max. velocity */
-            real d_t = courant * d_x / velocity;
+            real d_t = scen->get_courant_number() * d_x / velocity;
 
             /* number of time steps */
             n_t = ceil(scen->get_endtime() / d_t) + 1;

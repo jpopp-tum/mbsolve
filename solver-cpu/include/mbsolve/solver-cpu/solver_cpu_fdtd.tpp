@@ -64,7 +64,7 @@ solver_cpu_fdtd<num_lvl, density_algo>::solver_cpu_fdtd(
     }
 
     /* determine simulation settings */
-    init_fdtd_simulation(dev, scen, 0.5);
+    init_fdtd_simulation(dev, scen);
 
     /* inverse grid point size for Ampere's law */
     m_dx_inv = 1.0 / scen->get_gridpoint_size();
@@ -225,6 +225,7 @@ void
 solver_cpu_fdtd<num_lvl, density_algo>::run() const
 {
     real m_h_mur_1 = 0.0, m_h_mur_end = 0.0;
+    real c_num = m_scenario->get_courant_number();
 
 #pragma omp parallel
     {
@@ -268,7 +269,7 @@ solver_cpu_fdtd<num_lvl, density_algo>::run() const
                     if (m_scenario->get_boundary_flag() == 1) {
                         /* apply boundary condition */
                         m_h[0] = m_h_mur_1 +
-                            (0.5 - 1.0) / (0.5 + 1.0) * (m_h[1] - m_h[0]);
+                            (c_num - 1.0) / (c_num + 1.0) * (m_h[1] - m_h[0]);
                         m_h_mur_1 = m_h[1];
                     } else {
                         m_h[0] = 0;
@@ -276,7 +277,7 @@ solver_cpu_fdtd<num_lvl, density_algo>::run() const
                 } else if (i == m_scenario->get_num_gridpoints() - 1) {
                     if (m_scenario->get_boundary_flag() == 1) {
                         m_h[m_scenario->get_num_gridpoints()] = m_h_mur_end +
-                            (0.5 - 1.0) / (0.5 + 1.0) *
+                            (c_num - 1.0) / (c_num + 1.0) *
                                 (m_h[m_scenario->get_num_gridpoints() - 1] -
                                  m_h[m_scenario->get_num_gridpoints()]);
                         m_h_mur_end =

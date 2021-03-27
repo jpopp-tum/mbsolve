@@ -189,6 +189,16 @@ scenario::set_boundary_flag(bool flag)
 {
     flag_BC = flag;
 }
+
+real
+scenario::get_courant_number() const
+{
+    return n_courant;
 }
 
-
+void
+scenario::set_courant_number(real c)
+{
+    n_courant = c;
+}
+}

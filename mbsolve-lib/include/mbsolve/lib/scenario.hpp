@@ -94,11 +94,15 @@ private:
 
 public:
     /**
-     * Constructs random initial conditions deviating slightly from an initial density
-     * matrix \p rho = [0 0 ; 0 1].
+     * Constructs random initial conditions deviating slightly from an initial
+     * density matrix \p rho = [0 0 ; 0 1].
      */
-    explicit ic_density_random_2lvl(real num_c_cell, real mean = 0.0, real stddev = 1.0)
-      : m_rand_gen(m_rand_dev()), m_dis(mean, stddev), num_carrier_cell(num_c_cell)
+    explicit ic_density_random_2lvl(
+        real num_c_cell,
+        real mean = 0.0,
+        real stddev = 1.0)
+      : m_rand_gen(m_rand_dev()), m_dis(mean, stddev),
+        num_carrier_cell(num_c_cell)
     {}
 
     /**
@@ -212,6 +216,8 @@ private:
     unsigned int m_num_gridpoints;
 
     real m_timestep_size;
+
+    real n_courant{ 0.5 };
 
     real m_gridpoint_size;
 
@@ -377,14 +383,24 @@ public:
     void set_ic_magnetic(std::shared_ptr<ic_field> magnetic_init);
 
     /**
-     * Sets Flag for the Field boundary condition
+     * Gets flag for the field boundary condition
      */
     bool get_boundary_flag() const;
 
     /**
-     * Sets Flag for the Field boundary condition
+     * Sets flag for the field boundary condition
      */
     void set_boundary_flag(bool flag);
+
+    /**
+     * Gets Courant number
+     */
+    real get_courant_number() const;
+
+    /**
+     * Sets Courant number
+     */
+    void set_courant_number(real c);
 };
 }
 
