@@ -222,7 +222,7 @@ solver_cpu_fdtd<num_lvl, density_algo>::~solver_cpu_fdtd()
 
 template<unsigned int num_lvl, template<unsigned int> class density_algo>
 void
-solver_cpu_fdtd<num_lvl, density_algo>::run() const
+solver_cpu_fdtd<num_lvl, density_algo>::run()
 {
     real m_h_mur_1 = 0.0, m_h_mur_end = 0.0;
     real c_num = m_scenario->get_courant_number();

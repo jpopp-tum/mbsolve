@@ -350,7 +350,7 @@ solver_cpu_fdtd_red<num_lvl, density_algo>::apply_sources(
 
 template<unsigned int num_lvl, template<unsigned int> class density_algo>
 void
-solver_cpu_fdtd_red<num_lvl, density_algo>::run() const
+solver_cpu_fdtd_red<num_lvl, density_algo>::run()
 {
     unsigned int P = omp_get_max_threads();
     uint64_t num_gridpoints = m_scenario->get_num_gridpoints();

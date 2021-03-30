@@ -44,7 +44,7 @@ public:
 
     ~solver_cpu_fdtd();
 
-    void run() const;
+    void run();
 
 private:
     const std::string m_name;
