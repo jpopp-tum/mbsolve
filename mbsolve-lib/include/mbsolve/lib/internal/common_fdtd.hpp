@@ -147,6 +147,9 @@ public:
      * determined by the density matrix)
      */
     real gamma;
+
+    /* Standard deviation of spontaneous emission noise. */
+    real noise_sp;
 };
 
 /**
@@ -184,6 +187,9 @@ get_fdtd_constants(
 
     /* overlap factor */
     sc.gamma = mat->get_overlap_factor();
+
+    /* Standard deviation of spontaneous emission noise. */
+    sc.noise_sp = mat->get_sigma_sp();
 
     return sc;
 }

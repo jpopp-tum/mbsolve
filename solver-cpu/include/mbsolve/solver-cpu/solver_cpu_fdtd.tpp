@@ -105,6 +105,8 @@ solver_cpu_fdtd<num_lvl, density_algo>::solver_cpu_fdtd(
         (real*) mb_aligned_alloc(sizeof(real) * scen->get_num_gridpoints());
     m_gamma =
         (real*) mb_aligned_alloc(sizeof(real) * scen->get_num_gridpoints());
+    m_noise_sp =
+        (real*) mb_aligned_alloc(sizeof(real) * scen->get_num_gridpoints());
 
     m_mat_indices = (unsigned int*) mb_aligned_alloc(
         sizeof(unsigned int) * scen->get_num_gridpoints());
@@ -134,6 +136,7 @@ solver_cpu_fdtd<num_lvl, density_algo>::solver_cpu_fdtd(
         m_fac_b[i] = m_sim_consts_fdtd[idx].fac_b;
         m_fac_c[i] = m_sim_consts_fdtd[idx].fac_c;
         m_gamma[i] = m_sim_consts_fdtd[idx].gamma;
+        m_noise_sp[i] = m_sim_consts_fdtd[idx].noise_sp;
         m_mat_indices[i] = idx;
         
         /* initialization */
@@ -239,10 +242,13 @@ solver_cpu_fdtd<num_lvl, density_algo>::run()
 #pragma omp for schedule(static)
 #endif
             for (int i = 0; i < m_scenario->get_num_gridpoints(); i++) {
+                real xi_sp = m_dist(m_gen);
                 m_e[i] = m_fac_a[i] * m_e[i] +
                     m_fac_b[i] *
                         (-m_gamma[i] * m_p[i] +
-                         (m_h[i + 1] - m_h[i]) * m_dx_inv);
+                         (m_h[i + 1] - m_h[i]) * m_dx_inv) +
+                    xi_sp * m_noise_sp[i];
+                ;
             }
 
             /* TODO only one thread should apply a certain source */

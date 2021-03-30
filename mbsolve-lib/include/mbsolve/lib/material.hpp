@@ -47,6 +47,9 @@ private:
     real m_overlap_factor;
     real m_losses;
 
+    /* standard deviation spontaneous emission noise */
+    real m_sigma_sp;
+
     /* quantum mechanical description of active material */
     std::shared_ptr<qm_description> m_qm;
 
@@ -64,7 +67,8 @@ public:
      * \param [in] overlap_factor   Overlap of active region an electric field
                                     between 0.0 and 1.0.
      * \param [in] losses           Optical losses.
-     * \param [in] rel_permeabiliy  Relative Permeability.
+     * \param [in] rel_permeability Relative Permeability.
+     * \param [in] m_sigma_sp       Standard deviation of spontaneous emission noise.
      */
     explicit material(
         const std::string& id,
@@ -72,10 +76,11 @@ public:
         real rel_permittivity = 1.0,
         real overlap_factor = 1.0,
         real losses = 0.0,
-        real rel_permeability = 1.0)
+        real rel_permeability = 1.0,
+        real sigma_sp = 0.0)
       : m_id(id), m_qm(qm), m_rel_permittivity(rel_permittivity),
         m_rel_permeability(rel_permeability), m_losses(losses),
-        m_overlap_factor(overlap_factor)
+        m_overlap_factor(overlap_factor), m_sigma_sp(sigma_sp)
     {}
 
     ~material() {}
@@ -113,6 +118,14 @@ public:
      * Gets overlap factor &Gamma;.
      */
     real get_overlap_factor() const { return m_overlap_factor; }
+
+    /**
+     * Gets spontaneous emission noise rate.
+     */
+    real get_sigma_sp() const
+    {
+        return m_sigma_sp;
+    }
 
     /**
      * Adds material to library.
