@@ -43,7 +43,7 @@ public:
     /**
      * Returns initial density matrix for given position x.
      */
-    virtual const qm_operator& initialize(real x) = 0;
+    virtual qm_operator initialize(real x) = 0;
 };
 
 /**
@@ -63,7 +63,7 @@ public:
      *
      * \param [in] rho   Initial density matrix.
      */
-    explicit ic_density_const(const qm_operator& rho) : m_rho(rho)
+    explicit ic_density_const(qm_operator rho) : m_rho(rho)
     {
         /* TODO check whether rho_init is a valid matrix
          * possibly exceptions for zero matrix, indicating that random init
@@ -74,7 +74,7 @@ public:
     /**
      * Returns initial density matrix (independent of position).
      */
-    const qm_operator& initialize(real /* x */) { return m_rho; }
+    qm_operator initialize(real /* x */) { return m_rho; }
 };
 
 /**
@@ -205,7 +205,7 @@ public:
         const std::string& name,
         unsigned int num_gridpoints,
         real endtime,
-        const qm_operator& rho_init,
+        qm_operator rho_init,
         unsigned int num_timesteps = 2);
 
     /**

@@ -27,7 +27,7 @@ scenario::scenario(
     const std::string& name,
     unsigned int num_gridpoints,
     real endtime,
-    const qm_operator& rho_init,
+    qm_operator rho_init,
     unsigned int num_timesteps)
   : scenario(
         name,
